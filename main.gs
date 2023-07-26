@@ -86,7 +86,7 @@ function fetchData(team, startDateTime, endDateTime, sheetName) {
 
   // Write headers and data to sheet
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
+  sheet.getRange(2, 1, rows.length, rows[0].length).setValues(rows);
 }
 
 // Function to flatten a nested JSON object
