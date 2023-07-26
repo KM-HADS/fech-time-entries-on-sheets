@@ -45,9 +45,12 @@ function fetchData(team, startDateTime, endDateTime, sheetName) {
   // Convert dates to millisecond timestamps
   var startDateTimestamp = Date.parse(startDateTime);
   var endDateTimestamp = Date.parse(endDateTime);
+  //
+  var team_members = getTeams().find(teamObj=>teamObj.id===team).members
+  var assignee_ids = team_members.map(member=>member.user.id)
 
   // Fetch data from ClickUp
-  var url = `https://api.clickup.com/api/v2/team/${team}/time_entries?start_date=${startDateTimestamp}&end_date=${endDateTimestamp}`;
+  var url = `https://api.clickup.com/api/v2/team/${team}/time_entries?start_date=${startDateTimestamp}&end_date=${endDateTimestamp}&assignee=${assignee_ids.join(',')}`;
   var token = PropertiesService.getScriptProperties().getProperty('token');
   var params = {
     headers: {
