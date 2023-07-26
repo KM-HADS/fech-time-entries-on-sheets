@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      div {
+        margin-bottom: 10px;
+      }
+      label {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+      }
+      input[type="text"], input[type="date"], select {
+        width: 150px;
+      }
+      #execute {
+        margin-left: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <label for="team">Workspace:</label>
+      <select id="team" name="team"></select>
+    </div>
+    <div>
+      <label for="startDateTime">Start Date:</label>
+      <input type="date" id="startDateTime" name="startDateTime">
+    </div>
+    <div>
+      <label for="endDateTime">End Date:</label>
+      <input type="date" id="endDateTime" name="endDateTime">
+    </div>
+    <div>
+      <label for="sheetName">Sheet Name:</label>
+      <input type="text" id="sheetName" name="sheetName">
+      <div style="font-size: 0.8em; color: gray; margin-left: 100px;">Writes to the current sheet if blank</div>
+    </div>
+    <button id="execute">Execute</button>
+    <script>
+      document.getElementById("execute").addEventListener("click", function() {
+        var team = document.getElementById("team").value;
+        var startDateTime = document.getElementById("startDateTime").value;
+        var endDateTime = document.getElementById("endDateTime").value;
+        var sheetName = document.getElementById("sheetName").value;
+
+        // Call the server-side function
+        google.script.run.fetchData(team, startDateTime, endDateTime, sheetName);
+      });
+
+      // Set default dates to current month start and end
+      var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+      var firstDay = new Date(y, m, 1);
+      var lastDay = new Date(y, m + 1, 0);
+
+      document.getElementById("startDateTime").valueAsDate = firstDay;
+      document.getElementById("endDateTime").valueAsDate = lastDay;
+
+      // Populate teams dropdown
+      google.script.run.withSuccessHandler(populateTeams).getTeams();
+
+      function populateTeams(teams) {
+        var select = document.getElementById("team");
+        for(var i = 0; i < teams.length; i++) {
+          var opt = document.createElement('option');
+          opt.value = teams[i].id;
+          opt.innerHTML = teams[i].name;
+          select.appendChild(opt);
+        }
+      }
+    </script>
+  </body>
+</html>
